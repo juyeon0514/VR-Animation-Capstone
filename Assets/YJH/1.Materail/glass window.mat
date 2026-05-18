@@ -49,6 +49,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CanvasTex:
+        m_Texture: {fileID: 2800000, guid: 1ed9936c7c6301e42bc86e87b8056df5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -106,6 +110,7 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _BrushStrength: 0.08
     - _BumpScale: 1
+    - _CanvasStrength: 0.15
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
