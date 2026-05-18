@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: door_material
+  m_Name: floor
   m_Shader: {fileID: -6465566751694194690, guid: 4776698fb3d97f54aa48eadd3e20abb0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -91,7 +91,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BrushStrength: 0.33
+    - _BrushStrength: 0.48
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -121,16 +121,16 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.46274513, g: 0.5254902, b: 0.72156864, a: 1}
-    - _Color: {r: 0.46274507, g: 0.5254902, b: 0.72156864, a: 1}
+    - _BaseColor: {r: 0.72156864, g: 0.6666667, b: 0.6431373, a: 1}
+    - _Color: {r: 0.72156864, g: 0.6666667, b: 0.6431373, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShadowColor: {r: 0.18039216, g: 0.22745098, b: 0.4862745, a: 1}
+    - _ShadowColor: {r: 0.4078431, g: 0.3607843, b: 0.54901963, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TintColor: {r: 0.32941177, g: 0.4, b: 0.72156864, a: 1}
+    - _TintColor: {r: 0.8039216, g: 0.7372549, b: 0.76862746, a: 1}
     - _Whtie_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4947218301071593033
+--- !u!114 &6043065015420562230
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
