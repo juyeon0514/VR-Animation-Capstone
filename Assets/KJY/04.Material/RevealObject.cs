@@ -10,6 +10,9 @@ public class RevealObject : MonoBehaviour
 
     private Material m_Mat;
 
+    private static readonly int MyLightPositionID = Shader.PropertyToID("_MyLightPosition");
+    private static readonly int MyLightDirectionID = Shader.PropertyToID("_MyLightDirection");
+
     private void Start()
     {
         if (targetRenderer == null)
@@ -46,12 +49,13 @@ public class RevealObject : MonoBehaviour
 
         if (spotLight != null && spotLight.gameObject.activeInHierarchy)
         {
-            m_Mat.SetVector("_MyLightPosition", spotLight.transform.position);
-            m_Mat.SetVector("_MyLightDirection", -spotLight.transform.forward);
+            m_Mat.SetVector(MyLightPositionID, spotLight.transform.position);
+            m_Mat.SetVector(MyLightDirectionID, -spotLight.transform.forward);
         }
         else
         {
-            m_Mat.SetVector("_MyLightPosition", new Vector4(9999, 9999, 9999, 1));
+            m_Mat.SetVector(MyLightPositionID, new Vector4(9999, 9999, 9999, 1));
+            m_Mat.SetVector(MyLightDirectionID, Vector3.zero);
         }
     }
 }

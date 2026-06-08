@@ -16,6 +16,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] private bool disableAfterSuccess = true;
 
     [Header("하이라이트")]
+    [SerializeField] private bool useHighlight = true;
     [SerializeField] private Color highlightColor = Color.yellow;
     [SerializeField] private float highlightIntensity = 1.5f;
 
@@ -35,6 +36,11 @@ public class Interactable : MonoBehaviour
 
     private void Awake()
     {
+        if (!useHighlight)
+        {
+            return;
+        }
+
         renderers = GetComponentsInChildren<Renderer>();
 
         originalMaterials = new Material[renderers.Length][];
@@ -59,6 +65,11 @@ public class Interactable : MonoBehaviour
 
     public void SetHighlight(bool value)
     {
+        if (!useHighlight)
+        {
+            return;
+        }
+
         if (hasInteracted)
         {
             value = false;
