@@ -6,7 +6,7 @@ public class PlayerPosture : MonoBehaviour
     {
         Standing,
         Crouching,
-        Prone
+        SideLying
     }
 
     [Header("Components")]
@@ -14,25 +14,22 @@ public class PlayerPosture : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private CameraRotate cameraRotate;
 
-    [Header("Heights")]
+    [Header("Character Controller Height")]
     [SerializeField] private float standingHeight = 2.0f;
     [SerializeField] private float crouchHeight = 1.0f;
-    [SerializeField] private float proneHeight = 0.45f;
+    [SerializeField] private float sideLieHeight = 0.4f;
 
-    [Header("Camera Local Y")]
-    [SerializeField] private float standingCameraY = 0.8f;
+    [Header("Camera Local Position")]
     [SerializeField] private float crouchCameraY = 0.35f;
-    [SerializeField] private float proneCameraY = 0.12f;
-
-    [Header("Camera Tilt")]
-    [SerializeField] private float standingCameraZRotation = 0f;
-    [SerializeField] private float proneCameraZRotation = 85f;
+    [SerializeField] private float sideLieCameraY = -1.0f;
 
     [Header("Transition")]
     [SerializeField] private float transitionSpeed = 8f;
 
     private PostureState currentState = PostureState.Standing;
+
     private Vector3 originalCameraLocalPosition;
+    private float standingCameraY;
 
     private void Start()
     {
@@ -48,6 +45,12 @@ public class PlayerPosture : MonoBehaviour
 
         originalCameraLocalPosition = cameraTransform.localPosition;
         standingCameraY = originalCameraLocalPosition.y;
+
+        if (controller != null)
+        {
+            controller.height = standingHeight;
+            controller.center = new Vector3(0f, standingHeight / 2f, 0f);
+        }
     }
 
     private void Update()
@@ -58,9 +61,31 @@ public class PlayerPosture : MonoBehaviour
 
     private void HandleInput()
     {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (currentState == PostureState.SideLying)
+            {
+                currentState = PostureState.Standing;
+
+                if (cameraRotate != null)
+                {
+                    cameraRotate.SetSideLieView(false);
+                }
+            }
+            else
+            {
+                currentState = PostureState.SideLying;
+
+                if (cameraRotate != null)
+                {
+                    cameraRotate.SetSideLieView(true);
+                }
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            if (currentState != PostureState.Prone)
+            if (currentState != PostureState.SideLying)
             {
                 currentState = PostureState.Crouching;
             }
@@ -73,50 +98,38 @@ public class PlayerPosture : MonoBehaviour
                 currentState = PostureState.Standing;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            if (currentState == PostureState.Prone)
-            {
-                currentState = PostureState.Standing;
-            }
-            else
-            {
-                currentState = PostureState.Prone;
-            }
-        }
     }
 
     private void UpdatePosture()
     {
         float targetHeight = standingHeight;
         float targetCameraY = standingCameraY;
-        float targetTilt = standingCameraZRotation;
 
         if (currentState == PostureState.Crouching)
         {
             targetHeight = crouchHeight;
             targetCameraY = crouchCameraY;
-            targetTilt = standingCameraZRotation;
         }
-        else if (currentState == PostureState.Prone)
+        else if (currentState == PostureState.SideLying)
         {
-            targetHeight = proneHeight;
-            targetCameraY = proneCameraY;
-            targetTilt = proneCameraZRotation;
+            targetHeight = sideLieHeight;
+            targetCameraY = sideLieCameraY;
         }
 
-        controller.height = Mathf.Lerp(
-            controller.height,
-            targetHeight,
-            Time.deltaTime * transitionSpeed
-        );
+        if (controller != null)
+        {
+            controller.height = Mathf.Lerp(
+                controller.height,
+                targetHeight,
+                Time.deltaTime * transitionSpeed
+            );
 
-        controller.center = Vector3.Lerp(
-            controller.center,
-            new Vector3(0f, targetHeight / 2f, 0f),
-            Time.deltaTime * transitionSpeed
-        );
+            controller.center = Vector3.Lerp(
+                controller.center,
+                new Vector3(0f, targetHeight / 2f, 0f),
+                Time.deltaTime * transitionSpeed
+            );
+        }
 
         Vector3 targetCameraPosition = new Vector3(
             originalCameraLocalPosition.x,
@@ -129,10 +142,5 @@ public class PlayerPosture : MonoBehaviour
             targetCameraPosition,
             Time.deltaTime * transitionSpeed
         );
-
-        if (cameraRotate != null)
-        {
-            cameraRotate.SetCameraTilt(targetTilt, transitionSpeed);
-        }
     }
 }
