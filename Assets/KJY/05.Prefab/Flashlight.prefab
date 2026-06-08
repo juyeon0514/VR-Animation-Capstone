@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 3645271723330855668}
   - component: {fileID: 110921219754620122}
   - component: {fileID: 8920703046122182503}
+  - component: {fileID: 701357484259982094}
+  - component: {fileID: 9164052002086001276}
+  - component: {fileID: 5414326825358944046}
   m_Layer: 0
   m_Name: Flashlight
   m_TagString: Untagged
@@ -27,13 +30,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800073928701130871}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.64267, y: 0.64267, z: -0.29491588, w: 0.29491588}
+  m_LocalRotation: {x: -0.6426699, y: 0.6426699, z: -0.29491597, w: 0.29491597}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.024000002, y: 0.024000002, z: 0.024000002}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 130.7, z: -90}
 --- !u!33 &3645271723330855668
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -116,3 +119,55 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!64 &701357484259982094
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800073928701130871}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 9a3b57f0a1248be419dd9c4d54748512, type: 3}
+--- !u!114 &9164052002086001276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800073928701130871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 772e84b8bcc89db4bbd3756401138e7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  itemToGive: {fileID: 0}
+  requiredItem: {fileID: 0}
+  onAction:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5414326825358944046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1800073928701130871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015d50b1657a8eb4a9a89f344d27b7a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlashlightToShader
+  tmpMaterial: {fileID: 0}
