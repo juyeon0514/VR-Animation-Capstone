@@ -92,7 +92,6 @@ public class Inventory : MonoBehaviour
         {
             currentHandObject = Instantiate(item.prefab, handAnchor);
             currentHandObject.transform.localPosition = Vector3.zero;
-            currentHandObject.transform.localRotation = Quaternion.identity;
         }
 
         ApplyItemSpecialEffect(item.itemName);
