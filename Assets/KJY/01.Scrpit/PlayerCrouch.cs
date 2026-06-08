@@ -3,50 +3,101 @@ using UnityEngine;
 public class PlayerCrouch : MonoBehaviour
 {
     [Header("Components")]
-    public CharacterController controller; // 플레이어의 Character Controller
-    public Transform cameraTransform;      // Main Camera의 Transform
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Transform cameraTransform;
 
     [Header("Crouch Settings")]
-    public float standingHeight = 2.0f;    // 서 있을 때 콜라이더 높이
-    public float crouchHeight = 1.0f;      // 앉았을 때 콜라이더 높이
-    public float crouchTransitionSpeed = 10f; // 앉고 일어서는 속도 (부드럽게)
+    [SerializeField] private float standingHeight = 2.0f;
+    [SerializeField] private float crouchHeight = 1.0f;
+    [SerializeField] private float crouchTransitionSpeed = 10f;
 
-    // 카메라의 로컬 Y 위치 (머리 높이)
-    private float standingCameraY = 0.8f;
-    private float crouchCameraY = 0.2f;
+    [Header("Camera Settings")]
+    [SerializeField] private float crouchCameraOffset = 1.0f;
 
-    private bool isCrouching = false;
+    [Header("Ceiling Check")]
+    [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private float ceilingCheckRadius = 0.3f;
 
-    void Start()
+    private float standingCameraY;
+    private float crouchCameraY;
+
+    private Vector3 originalCameraLocalPosition;
+
+    private bool isCrouching;
+
+    private void Start()
     {
-        // 시작할 때 서 있는 상태의 카메라 높이를 저장해둡니다.
-        standingCameraY = cameraTransform.localPosition.y;
-        crouchCameraY = standingCameraY - (standingHeight - crouchHeight) / 2f;
+        if (controller == null)
+        {
+            controller = GetComponent<CharacterController>();
+        }
+
+        originalCameraLocalPosition = cameraTransform.localPosition;
+
+        standingCameraY = originalCameraLocalPosition.y;
+        crouchCameraY = standingCameraY - crouchCameraOffset;
+
+        controller.height = standingHeight;
+        controller.center = new Vector3(0f, standingHeight / 2f, 0f);
     }
 
-    void Update()
+    private void Update()
     {
-        // 왼쪽 Ctrl 키를 누르고 있을 때
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             isCrouching = true;
         }
-        // 왼쪽 Ctrl 키에서 손을 뗐을 때
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
+
+        if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            isCrouching = false;
+            if (!IsCeilingBlocked())
+            {
+                isCrouching = false;
+            }
         }
 
-        // 상태에 따라 부드럽게 높이 변경 (스르륵 앉고 스르륵 일어남)
-        if (isCrouching)
-        {
-            controller.height = Mathf.Lerp(controller.height, crouchHeight, Time.deltaTime * crouchTransitionSpeed);
-            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, new Vector3(0, crouchCameraY, 0), Time.deltaTime * crouchTransitionSpeed);
-        }
-        else
-        {
-            controller.height = Mathf.Lerp(controller.height, standingHeight, Time.deltaTime * crouchTransitionSpeed);
-            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, new Vector3(0, standingCameraY, 0), Time.deltaTime * crouchTransitionSpeed);
-        }
+        UpdateCrouch();
+    }
+
+    private void UpdateCrouch()
+    {
+        float targetHeight = isCrouching ? crouchHeight : standingHeight;
+        float targetCenterY = targetHeight / 2f;
+        float targetCameraY = isCrouching ? crouchCameraY : standingCameraY;
+
+        controller.height = Mathf.Lerp(
+            controller.height,
+            targetHeight,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+
+        controller.center = Vector3.Lerp(
+            controller.center,
+            new Vector3(0f, targetCenterY, 0f),
+            Time.deltaTime * crouchTransitionSpeed
+        );
+
+        Vector3 targetCameraPosition = new Vector3(
+            originalCameraLocalPosition.x,
+            targetCameraY,
+            originalCameraLocalPosition.z
+        );
+
+        cameraTransform.localPosition = Vector3.Lerp(
+            cameraTransform.localPosition,
+            targetCameraPosition,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+    }
+
+    private bool IsCeilingBlocked()
+    {
+        Vector3 checkPosition = transform.position + Vector3.up * standingHeight;
+
+        return Physics.CheckSphere(
+            checkPosition,
+            ceilingCheckRadius,
+            obstacleLayer
+        );
     }
 }
