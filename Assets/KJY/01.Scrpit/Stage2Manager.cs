@@ -18,6 +18,9 @@ public class Stage2Manager : MonoBehaviour
     [Header("시작문")]
     [SerializeField] private Stage2StartDoor startDoor;
 
+    [Header("방 입장 트리거")]
+    [SerializeField] private Stage2RoomEnterTrigger roomEnterTrigger;
+
     [Header("왼쪽/오른쪽 선택문")]
     [SerializeField] private Stage2Door leftDoor;
     [SerializeField] private Stage2Door rightDoor;
@@ -43,6 +46,8 @@ public class Stage2Manager : MonoBehaviour
     [Header("클리어 이벤트")]
     [SerializeField] private UnityEvent onStageClear;
 
+    private bool anomalyStarted;
+
     private int correctCount;
     private bool hasAnomaly;
     private bool isTransitioning;
@@ -57,6 +62,7 @@ public class Stage2Manager : MonoBehaviour
         ResetDoors();
         ResetCorridorEnterTriggers();
         ResetCorridorEndTriggers();
+        ResetRoomEnterTrigger();
 
         StartNewRound();
         MovePlayer(startRoomSpawnPoint);
@@ -76,6 +82,8 @@ public class Stage2Manager : MonoBehaviour
 
     public void ReachCorridorEnd(Stage2DoorType selectedDoor)
     {
+        Debug.Log($"통로 끝 도착 호출됨: {selectedDoor}, isInCorridor: {isInCorridor}, isTransitioning: {isTransitioning}");
+
         if (isTransitioning)
         {
             return;
@@ -83,6 +91,7 @@ public class Stage2Manager : MonoBehaviour
 
         if (!isInCorridor)
         {
+            Debug.LogWarning("통로에 들어간 상태가 아니라서 무시됨");
             return;
         }
 
@@ -138,6 +147,7 @@ public class Stage2Manager : MonoBehaviour
         ResetDoors();
         ResetCorridorEnterTriggers();
         ResetCorridorEndTriggers();
+        ResetRoomEnterTrigger();
 
         StartNewRound();
     }
@@ -146,11 +156,12 @@ public class Stage2Manager : MonoBehaviour
     {
         ResetAllAnomalies();
 
+        anomalyStarted = false;
         hasAnomaly = Random.value > noAnomalyChance;
 
         if (hasAnomaly)
         {
-            ActivateRandomOneAnomaly();
+            SelectRandomOneAnomaly();
         }
         else
         {
@@ -160,6 +171,72 @@ public class Stage2Manager : MonoBehaviour
 
         UpdateProgressText();
         UpdateStartDoorProgress();
+    }
+
+    private void SelectRandomOneAnomaly()
+    {
+        if (anomalies == null || anomalies.Length == 0)
+        {
+            Debug.LogWarning("등록된 이상현상이 없습니다. 정상 방으로 처리합니다.");
+            hasAnomaly = false;
+            return;
+        }
+
+        int randomIndex = Random.Range(0, anomalies.Length);
+
+        if (anomalies.Length > 1)
+        {
+            while (randomIndex == lastAnomalyIndex)
+            {
+                randomIndex = Random.Range(0, anomalies.Length);
+            }
+        }
+
+        lastAnomalyIndex = randomIndex;
+        currentAnomaly = anomalies[randomIndex];
+
+        if (currentAnomaly == null)
+        {
+            Debug.LogWarning("선택된 이상현상이 비어 있습니다. 정상 방으로 처리합니다.");
+            hasAnomaly = false;
+            return;
+        }
+
+        Debug.Log("이번 방에 예정된 이상현상: " + currentAnomaly.AnomalyName);
+    }
+
+    public void StartRoomAnomaly()
+    {
+        if (anomalyStarted)
+        {
+            return;
+        }
+
+        anomalyStarted = true;
+
+        if (!hasAnomaly)
+        {
+            Debug.Log("방 입장: 이번 방은 이상현상 없음");
+            return;
+        }
+
+        if (currentAnomaly == null)
+        {
+            Debug.LogWarning("방 입장: currentAnomaly가 비어 있습니다.");
+            return;
+        }
+
+        currentAnomaly.ActivateAnomaly();
+
+        Debug.Log("방 입장 후 이상현상 시작: " + currentAnomaly.AnomalyName);
+    }
+
+    private void ResetRoomEnterTrigger()
+    {
+        if (roomEnterTrigger != null)
+        {
+            roomEnterTrigger.ResetTrigger();
+        }
     }
 
     private void ActivateRandomOneAnomaly()
@@ -289,7 +366,6 @@ public class Stage2Manager : MonoBehaviour
         }
 
         player.position = targetPoint.position;
-        player.rotation = targetPoint.rotation;
 
         if (playerController != null)
         {

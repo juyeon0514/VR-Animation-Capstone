@@ -2,18 +2,27 @@ using UnityEngine;
 
 public class ObjectToggleAnomaly : AnomalyBase
 {
+    [Header("Target")]
     [SerializeField] private GameObject targetObject;
+
+    [Header("Anomaly State")]
+    [SerializeField] private bool activeWhenAnomaly = false;
+
+    private bool originalActiveState;
 
     private void Awake()
     {
-        ResetAnomaly();
+        if (targetObject != null)
+        {
+            originalActiveState = targetObject.activeSelf;
+        }
     }
 
     public override void ActivateAnomaly()
     {
         if (targetObject != null)
         {
-            targetObject.SetActive(true);
+            targetObject.SetActive(activeWhenAnomaly);
         }
     }
 
@@ -21,7 +30,7 @@ public class ObjectToggleAnomaly : AnomalyBase
     {
         if (targetObject != null)
         {
-            targetObject.SetActive(false);
+            targetObject.SetActive(originalActiveState);
         }
     }
 }

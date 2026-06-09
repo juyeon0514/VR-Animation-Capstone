@@ -9,6 +9,9 @@ public class CorridorEndTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("통로 입구 트리거 감지: " + other.name);
+
+
         if (used)
         {
             return;
@@ -16,6 +19,7 @@ public class CorridorEndTrigger : MonoBehaviour
 
         if (!other.CompareTag("Player"))
         {
+            Debug.LogWarning("Player 태그가 아니라 무시됨: " + other.tag);
             return;
         }
 
