@@ -7,6 +7,14 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TMP_Text speakerText;
     [SerializeField] private TMP_Text dialogueText;
 
+    private void Awake()
+    {
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+        }
+    }
+
     public void ShowDialogue(string speaker, string dialogue)
     {
         if (dialoguePanel != null)
@@ -32,5 +40,4 @@ public class DialogueUI : MonoBehaviour
             dialoguePanel.SetActive(false);
         }
     }
-
 }
