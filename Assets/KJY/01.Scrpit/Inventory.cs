@@ -157,4 +157,9 @@ public class Inventory : MonoBehaviour
             Debug.LogError("Inventory에 Password UI가 등록되지 않았습니다!");
         }
     }
+
+    public bool HasItem(Item item)
+    {
+        return items.Contains(item);
+    }
 }

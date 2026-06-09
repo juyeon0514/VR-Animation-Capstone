@@ -15,7 +15,10 @@ public class Stage2Manager : MonoBehaviour
     [Header("이상현상 목록")]
     [SerializeField] private AnomalyBase[] anomalies;
 
-    [Header("문")]
+    [Header("시작문")]
+    [SerializeField] private Stage2StartDoor startDoor;
+
+    [Header("왼쪽/오른쪽 선택문")]
     [SerializeField] private Stage2Door leftDoor;
     [SerializeField] private Stage2Door rightDoor;
 
@@ -31,14 +34,11 @@ public class Stage2Manager : MonoBehaviour
     [SerializeField] private CharacterController playerController;
     [SerializeField] private Transform player;
 
-    [Tooltip("통로 끝에 도착한 뒤 다음 방처럼 보이게 이동할 위치입니다.")]
-    [SerializeField] private Transform nextRoomSpawnPoint;
+    [Tooltip("통로 끝에 도착한 뒤 다시 시작 방 전으로 이동할 위치입니다.")]
+    [SerializeField] private Transform startRoomSpawnPoint;
 
     [Header("진행도 텍스트")]
     [SerializeField] private TMP_Text[] progressTexts;
-
-    [Header("전환 효과")]
-    [SerializeField] private FadeUI fadeUI;
 
     [Header("클리어 이벤트")]
     [SerializeField] private UnityEvent onStageClear;
@@ -53,11 +53,13 @@ public class Stage2Manager : MonoBehaviour
 
     private void Start()
     {
+        ResetStartDoor();
         ResetDoors();
         ResetCorridorEnterTriggers();
         ResetCorridorEndTriggers();
 
         StartNewRound();
+        MovePlayer(startRoomSpawnPoint);
     }
 
     public void EnterCorridor(Stage2DoorType corridorType)
@@ -112,18 +114,9 @@ public class Stage2Manager : MonoBehaviour
             yield break;
         }
 
-        if (fadeUI != null)
-        {
-            yield return fadeUI.FadeOut();
-        }
-
         PrepareNextRoom();
-        MovePlayer(nextRoomSpawnPoint);
 
-        if (fadeUI != null)
-        {
-            yield return fadeUI.FadeIn();
-        }
+        MovePlayer(startRoomSpawnPoint);
 
         isInCorridor = false;
         isTransitioning = false;
@@ -141,9 +134,11 @@ public class Stage2Manager : MonoBehaviour
 
     private void PrepareNextRoom()
     {
+        ResetStartDoor();
         ResetDoors();
         ResetCorridorEnterTriggers();
         ResetCorridorEndTriggers();
+
         StartNewRound();
     }
 
@@ -164,6 +159,7 @@ public class Stage2Manager : MonoBehaviour
         }
 
         UpdateProgressText();
+        UpdateStartDoorProgress();
     }
 
     private void ActivateRandomOneAnomaly()
@@ -218,6 +214,14 @@ public class Stage2Manager : MonoBehaviour
         currentAnomaly = null;
     }
 
+    private void ResetStartDoor()
+    {
+        if (startDoor != null)
+        {
+            startDoor.ResetStartDoor();
+        }
+    }
+
     private void ResetDoors()
     {
         if (leftDoor != null)
@@ -263,20 +267,13 @@ public class Stage2Manager : MonoBehaviour
 
         ResetAllAnomalies();
         UpdateProgressText();
+        UpdateStartDoorProgress();
 
         Debug.Log("2스테이지 클리어!");
 
-        if (fadeUI != null)
-        {
-            yield return fadeUI.FadeOut();
-        }
-
         onStageClear?.Invoke();
 
-        if (fadeUI != null)
-        {
-            yield return fadeUI.FadeIn();
-        }
+        yield return null;
     }
 
     private void MovePlayer(Transform targetPoint)
@@ -316,16 +313,31 @@ public class Stage2Manager : MonoBehaviour
         }
     }
 
+    private void UpdateStartDoorProgress()
+    {
+        if (startDoor != null)
+        {
+            startDoor.UpdateProgressSign();
+        }
+    }
+
+    public string GetProgressText()
+    {
+        return correctCount + " / " + clearRequiredCount;
+    }
+
 #if UNITY_EDITOR
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            isInCorridor = true;
             ReachCorridorEnd(Stage2DoorType.Left);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            isInCorridor = true;
             ReachCorridorEnd(Stage2DoorType.Right);
         }
 

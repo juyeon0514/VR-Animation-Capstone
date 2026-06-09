@@ -15,8 +15,13 @@ public class Stage2Door : MonoBehaviour
     [SerializeField] private float openDuration = 0.5f;
 
     private Quaternion originalRotation;
+    private Quaternion openedRotation;
+
     private bool isOpen;
     private bool isOpening;
+    private bool isLocked;
+
+    private Coroutine openCoroutine;
 
     private void Awake()
     {
@@ -26,16 +31,23 @@ public class Stage2Door : MonoBehaviour
         }
 
         originalRotation = doorPivot.localRotation;
+        openedRotation = originalRotation * Quaternion.Euler(openEuler);
     }
 
     public void OpenDoor()
     {
+        if (isLocked)
+        {
+            Debug.Log("이 문은 더 이상 열 수 없습니다.");
+            return;
+        }
+
         if (isOpen || isOpening)
         {
             return;
         }
 
-        StartCoroutine(OpenRoutine());
+        openCoroutine = StartCoroutine(OpenRoutine());
     }
 
     private IEnumerator OpenRoutine()
@@ -43,7 +55,7 @@ public class Stage2Door : MonoBehaviour
         isOpening = true;
 
         Quaternion startRot = doorPivot.localRotation;
-        Quaternion endRot = Quaternion.Euler(openEuler);
+        Quaternion endRot = openedRotation;
 
         float timer = 0f;
 
@@ -60,11 +72,22 @@ public class Stage2Door : MonoBehaviour
         doorPivot.localRotation = endRot;
         isOpen = true;
         isOpening = false;
+        openCoroutine = null;
     }
 
     public void HideDoor()
     {
-        gameObject.SetActive(false);
+        if (openCoroutine != null)
+        {
+            StopCoroutine(openCoroutine);
+            openCoroutine = null;
+        }
+
+        doorPivot.localRotation = originalRotation;
+
+        isOpen = false;
+        isOpening = false;
+        isLocked = true;
     }
 
     public void ResetDoor()
@@ -76,8 +99,16 @@ public class Stage2Door : MonoBehaviour
             doorPivot = transform;
         }
 
+        if (openCoroutine != null)
+        {
+            StopCoroutine(openCoroutine);
+            openCoroutine = null;
+        }
+
         doorPivot.localRotation = originalRotation;
+
         isOpen = false;
         isOpening = false;
+        isLocked = false;
     }
 }

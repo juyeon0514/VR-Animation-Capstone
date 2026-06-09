@@ -4,7 +4,6 @@ using UnityEngine;
 public class DialLock : MonoBehaviour
 {
     [Header("Password Settings")]
-    [SerializeField] private int passwordLength = 4;
     [SerializeField] private TMP_Text passwordHintText;
     [SerializeField] private TMP_Text[] digitTexts;
 
@@ -15,30 +14,36 @@ public class DialLock : MonoBehaviour
     public Item rewardKey;
     public Inventory inventory;
 
+    [Header("Clear Target")]
+    [SerializeField] private GameObject objectToOpenOrDisable;
+
     private bool isSuccess = false;
 
-    private void Start()
+    private void OnEnable()
     {
-        GenerateRandomPassword();
+        LoadPasswordFromManager();
         InitDigits();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
-    private void GenerateRandomPassword()
+    private void LoadPasswordFromManager()
     {
-        correctPassword = "";
-
-        for (int i = 0; i < passwordLength; i++)
+        if (PasswordManager.Instance == null)
         {
-            int randomDigit = Random.Range(0, 10);
-            correctPassword += randomDigit.ToString();
+            Debug.LogError("PasswordManager가 씬에 없습니다.");
+            return;
         }
+
+        correctPassword = PasswordManager.Instance.CurrentPassword;
 
         if (passwordHintText != null)
         {
             passwordHintText.text = correctPassword;
         }
 
-        Debug.Log("랜덤 비밀번호: " + correctPassword);
+        Debug.Log("자물쇠가 받은 비밀번호: " + correctPassword);
     }
 
     private void InitDigits()
@@ -108,6 +113,9 @@ public class DialLock : MonoBehaviour
             currentInput += currentDigits[i].ToString();
         }
 
+        Debug.Log("입력한 비밀번호: " + currentInput);
+        Debug.Log("정답 비밀번호: " + correctPassword);
+
         if (currentInput == correctPassword)
         {
             Success();
@@ -132,6 +140,11 @@ public class DialLock : MonoBehaviour
         if (rewardKey != null && inventory != null)
         {
             inventory.AddItem(rewardKey);
+        }
+
+        if (objectToOpenOrDisable != null)
+        {
+            objectToOpenOrDisable.SetActive(false);
         }
 
         if (InteractionUI.Instance != null)

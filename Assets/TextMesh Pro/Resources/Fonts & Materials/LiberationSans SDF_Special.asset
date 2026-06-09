@@ -30,7 +30,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Radius: 2.5
+    - _Radius: 1
     m_Colors:
     - _TextColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
@@ -8026,7 +8026,7 @@ Texture2D:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_IsAlphaChannelOptional: 0
-  serializedVersion: 3
+  serializedVersion: 4
   m_Width: 1024
   m_Height: 1024
   m_CompleteImageSize: 1048576
