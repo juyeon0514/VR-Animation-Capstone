@@ -35,7 +35,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             {
                 Debug.Log("[디버그] 상자가 아니라서 일반 장착을 실행합니다.");
                 inventory.EquipItem(item);
-                SoundManager.Instance.PlaySFX(SFXType.ItemEquip);
             }
         }
         else if (eventData.clickCount == 1)

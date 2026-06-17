@@ -49,6 +49,7 @@ public class MirrorScrew : MonoBehaviour
 
             yield return null;
         }
+        SoundManager.Instance.PlaySFX(SFXType.Nail);
 
         transform.position = endPos;
 

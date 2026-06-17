@@ -36,7 +36,6 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance))
         {
-            //Debug.Log("Ray Hit Object: " + hit.transform.name);
 
             Interactable obj = hit.transform.GetComponentInParent<Interactable>();
 
@@ -58,7 +57,6 @@ public class PlayerInteraction : MonoBehaviour
                     currentInteractable = obj;
                     currentInteractable.SetHighlight(true);
                 }
-
                 return;
             }
         }

@@ -3,8 +3,10 @@ using UnityEngine;
 public class FootstepSound : MonoBehaviour
 {
     [SerializeField] private CharacterController characterController;
+
+    [Header("Footstep")]
     [SerializeField] private float stepInterval = 0.45f;
-    [SerializeField] private float minMoveSpeed = 0.1f;
+    [SerializeField] private bool requireGrounded = true;
 
     private float stepTimer;
 
@@ -18,15 +20,18 @@ public class FootstepSound : MonoBehaviour
 
     private void Update()
     {
-        if (characterController == null)
+        bool hasMoveInput =
+            Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f ||
+            Mathf.Abs(Input.GetAxisRaw("Vertical")) > 0.1f;
+
+        bool isGrounded = true;
+
+        if (requireGrounded && characterController != null)
         {
-            return;
+            isGrounded = characterController.isGrounded;
         }
 
-        bool isMoving = characterController.velocity.magnitude > minMoveSpeed;
-        bool isGrounded = characterController.isGrounded;
-
-        if (!isMoving || !isGrounded)
+        if (!hasMoveInput || !isGrounded)
         {
             stepTimer = 0f;
             return;

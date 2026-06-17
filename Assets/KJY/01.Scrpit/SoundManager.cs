@@ -17,7 +17,9 @@ public enum SFXType
     ItemGet,
     ItemEquip,
     InventoryButton,
-    ButtonClick
+    ButtonClick,
+    Nail,
+    Drawer
 }
 
 public class SoundManager : MonoBehaviour
@@ -45,7 +47,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip itemEquipSFX;
     [SerializeField] private AudioClip inventoryButtonSFX;
     [SerializeField] private AudioClip buttonClickSFX;
-    
+    [SerializeField] private AudioClip nailSFX;
+    [SerializeField] private AudioClip drawerSFX;
+
     private BGMType? currentBGMType;
     
     private int currentWalkIndex;
@@ -225,7 +229,13 @@ public class SoundManager : MonoBehaviour
 
             case SFXType.ButtonClick:
                 return buttonClickSFX;
-
+           
+            case SFXType.Nail:
+                return nailSFX;
+            
+            case SFXType.Drawer:
+                return drawerSFX;
+            
             default:
                 return null;
         }

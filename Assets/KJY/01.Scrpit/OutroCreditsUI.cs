@@ -20,12 +20,7 @@ public class OutroCreditsUI : MonoBehaviour
     private string creditsContent =
 @"제작
 
-팀명 : Team Name
-
-기획 : 이름
-프로그래밍 : 이름
-아트 : 이름
-사운드 : 이름
+2091208 강주연
 
 Thank you for playing.";
 

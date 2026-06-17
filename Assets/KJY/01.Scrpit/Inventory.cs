@@ -86,6 +86,7 @@ public class Inventory : MonoBehaviour
     {
         if (currentHandObject != null) Destroy(currentHandObject);
 
+        SoundManager.Instance.PlaySFX(SFXType.ItemEquip);
         equippedItem = item;
 
         if (item.prefab != null)

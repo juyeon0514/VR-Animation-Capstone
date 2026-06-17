@@ -37,6 +37,7 @@ public class DrawerOpener : MonoBehaviour
     public void OpenDrawer()
     {
         isOpening = true;
+        SoundManager.Instance.PlaySFX(SFXType.Drawer);
         Debug.Log("서랍이 열립니다.");
     }
 }

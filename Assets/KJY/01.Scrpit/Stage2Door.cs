@@ -83,8 +83,8 @@ public class Stage2Door : MonoBehaviour
             StopCoroutine(openCoroutine);
             openCoroutine = null;
         }
-
         doorPivot.localRotation = originalRotation;
+        SoundManager.Instance.PlaySFX(SFXType.DoorClose);
 
         isOpen = false;
         isOpening = false;
@@ -104,7 +104,6 @@ public class Stage2Door : MonoBehaviour
             openCoroutine = null;
         }
 
-        SoundManager.Instance.PlaySFX(SFXType.DoorClose);
         doorPivot.localRotation = originalRotation;
 
         isOpen = false;
