@@ -130,7 +130,7 @@ public class Interactable : MonoBehaviour
         {
             player.inventory.AddItem(itemToGive);
             Debug.Log(itemToGive.itemName + " È¹µæ!");
-
+            SoundManager.Instance.PlaySFX(SFXType.ItemGet);
             if (InteractionUI.Instance != null)
             {
                 if (!string.IsNullOrEmpty(getItemMessage))

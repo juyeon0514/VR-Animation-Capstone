@@ -59,6 +59,7 @@ public class Stage2Door : MonoBehaviour
 
         float timer = 0f;
 
+        SoundManager.Instance.PlaySFX(SFXType.DoorOpen);
         while (timer < openDuration)
         {
             timer += Time.deltaTime;
@@ -92,8 +93,6 @@ public class Stage2Door : MonoBehaviour
 
     public void ResetDoor()
     {
-        gameObject.SetActive(true);
-
         if (doorPivot == null)
         {
             doorPivot = transform;
@@ -105,6 +104,7 @@ public class Stage2Door : MonoBehaviour
             openCoroutine = null;
         }
 
+        SoundManager.Instance.PlaySFX(SFXType.DoorClose);
         doorPivot.localRotation = originalRotation;
 
         isOpen = false;

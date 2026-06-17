@@ -26,6 +26,7 @@ public class DoorController : MonoBehaviour
     public void OpenDoor()
     {
         isOpening = true;
+        SoundManager.Instance.PlaySFX(SFXType.DoorOpen);
         Debug.Log("문이 부드럽게 열리기 시작합니다.");
     }
 }

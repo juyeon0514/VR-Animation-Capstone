@@ -29,11 +29,13 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
                 // 2. 이름이 일치하면 이 메시지가 뜹니다.
                 Debug.Log("[디버그] 상자 더블클릭 확인! UI 열기 함수를 호출합니다.");
                 inventory.OpenPasswordUI();
+
             }
             else
             {
                 Debug.Log("[디버그] 상자가 아니라서 일반 장착을 실행합니다.");
                 inventory.EquipItem(item);
+                SoundManager.Instance.PlaySFX(SFXType.ItemEquip);
             }
         }
         else if (eventData.clickCount == 1)
