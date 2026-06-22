@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BoxKey
   m_EditorClassIdentifier: 
   itemName: "\uC0C1\uC790\uC5F4\uC1E0"
-  icon: {fileID: 21300000, guid: 2e98cd2667c02e64ba5d709562970d8a, type: 3}
+  icon: {fileID: 21300000, guid: 1c261e0c84d56ab40af21f41db48f63a, type: 3}
   prefab: {fileID: 3399604626409856109, guid: 149e4bb39aa8da846b1eaf564fda22aa, type: 3}
